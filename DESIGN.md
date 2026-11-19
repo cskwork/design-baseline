@@ -21,6 +21,7 @@ Universal UI/UX, design token, modern web platform, and verification baseline. E
 - **Hierarchy through space and type:** Separate groups with generous whitespace and clear typographic scale first. Use `1px` hairline dividers only when spacing alone leaves ambiguity.
 - **Restraint over decoration:** Every border, badge, icon, and sentence must earn its pixels. When in doubt, subtract.
 - **Platform-First engineering:** Prefer native HTML/CSS capabilities (`<dialog>`, Popover API, CSS Anchor Positioning, `<details>`, `@container`, `subgrid`, `@starting-style`, `:user-invalid`, `field-sizing`) over JavaScript libraries. Use headless UI primitives (Radix / Base UI / shadcn) only when native elements cannot express the required interaction (e.g., comboboxes, multi-selects, complex data tables).
+- **Easy to learn for ages 10 to 60+:** A first-time user, from a 10-year-old student to someone in their 60s, must finish the core task without help or a manual. Use plain everyday words (no jargon, abbreviations, or internal codes), visible text labels on actions (icon-only only for universal icons such as close and search), familiar platform patterns over novel gestures, and one primary task per screen. Never hide required actions behind hover, long-press, or swipe alone. Prefer undo over confirmation dialogs, and make every error state the next step.
 - **Icons:** Lucide or equivalent single-weight line icons at uniform `1.5px` stroke (`1rem` inline, `1.25rem` toolbar/nav). Do not pair icons with every label when text alone is clearer.
 
 ---
@@ -206,4 +207,5 @@ Code compiling is not verification. Before reporting any UI task complete, verif
    - Zero console or uncaught page errors.
    - All mobile interactive elements meet `>= 44px` tap target dimensions.
    - Zero critical/serious axe-core accessibility violations and **CLS < 0.05**.
-5. **Visual Subtraction Audit:** Inspect actual rendered screenshots. Remove competing focal points, redundant borders, broken `8px` spacing, or awkward Korean wraps, then re-screenshot to confirm.
+5. **Ease-of-Learning Walkthrough:** Walk the core task as a first-time user (a 10-year-old student and a user in their 60s): every action has a visible text label, no step depends on hover/long-press/swipe alone, no jargon appears, and every error names the next action.
+6. **Visual Subtraction Audit:** Inspect actual rendered screenshots. Remove competing focal points, redundant borders, broken `8px` spacing, or awkward Korean wraps, then re-screenshot to confirm.
