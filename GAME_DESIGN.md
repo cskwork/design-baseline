@@ -24,7 +24,7 @@ Guidelines raise the floor; these six locked decisions set the ceiling. Never st
 AI coding agents can easily polish a dull prototype until it looks finished. Enforce strict stage gates so polish multiplies genuine fun rather than disguising weak mechanics:
 
 1. **Gate 1 — Greybox Core Loop (Zero-Art Fun Test):** Build the 30-second core loop using untextured geometric shapes, zero particles, and zero meta-menus. If movement, timing, risk-reward, and core verbs are not genuinely compelling in greybox, fix the rules—do not cover boredom with shaders or juice.
-2. **Gate 2 — Vertical Slice (Signature Identity Lock):** Build one complete, shippable slice (`Boot -> Play -> Escalation -> Climax -> Reward -> Retry`) featuring the locked art direction, dynamic audio, HUD minimalism, and feel tuning.
+2. **Gate 2 — Vertical Slice (Signature Identity Lock):** Build one complete, shippable slice (`Boot -> Play -> Escalation -> Climax -> Reward -> Retry`) featuring the locked art direction, dynamic audio, HUD minimalism, feel tuning, and first-run onboarding taught inside that same slice (§3 Teach Inside the Real Run).
 3. **Gate 3 — Depth Over Bloat (Combinatorial Expansion):** Expand content by introducing mechanics that interact multiplicatively with existing rules (synergies, counterplay, environmental combinations) rather than bolting on isolated one-off gimmicks.
 
 ---
@@ -59,6 +59,13 @@ Award-winning games orchestrate tension and release—constant max-intensity act
   2. **Develop** with real stakes and spatial variation.
   3. **Twist** by combining it with a second mechanic or reversing expectations.
   4. **Resolve** with a memorable climax or mastery check.
+- **Teach Inside the Real Run (Onboarding Is the Game):** The tutorial is the player's first real run, not a detour before it. It should feel like playing from the first second.
+  - **Same flow, run 1 = run N:** First-time players go through the exact same skeleton as returning players (`Title -> Play -> Escalation -> Result -> Retry`) in the same scene, HUD, and rules. Never add a separate tutorial mode, practice level, sandbox, "How to Play" screen, or mandatory intro modal, and never insert extra screens or presses between `Title` and the first verb. Only prompt text and early stakes differ.
+  - **Learn by doing the real verb:** Show a prompt when a verb first matters in play. Clear it when the player performs that verb in the live game, never through a `Next`/`OK`/`Got it` button or a page of text. A player who already knows the verb skips the prompt simply by doing it, so no "skip tutorial" dialog is needed.
+  - **One verb, one anchored prompt:** Show at most one short prompt at a time (`<= 1` line + active glyph), anchored where the action happens (on the target, control, or world object) rather than in a centered box. Teach only what the current core loop needs. Introduce later mechanics in the run where they first appear (Kishōtenketsu *Introduce*).
+  - **Safety through structure, not a frozen world:** Lower the early stakes inside the run. For example, the first threat waits until the first verb is done, windows are generous, and the first fail costs nothing. Do not stop the whole game behind an overlay. If something must hold, hold only the threat the player has not yet learned to answer, and keep animation, audio, and input alive.
+  - **Tutorial progress is real progress:** Rewards, collection, records, and (in learning games) answers earned during onboarding count under the normal rules. Never use a throwaway practice score. In learning games, the first real question is the first tutorial step.
+  - **Help on hesitation, never forced:** After visible hesitation on the current goal (about `5–8s` without the expected action), show a contextual hint or a `Help` control that points at the next real action in place. Hints never block input, rewind the run, or force a replay. Players with a save see no first-run prompts. Re-showing hints is a setting, not a separate lesson.
 - **Combat & Interaction Fairness:**
   - **Anticipation -> Active -> Recovery:** Every lethal attack, hazard, and heavy player move must telegraph visually and audibly before becoming active. Never ship 0-frame cheap hits.
   - **Player-favorable hitboxes:** Inset the player's damage hurtbox slightly inside the visual sprite (`~75–85%`), and keep player attacks, ledge grabs, and pickup radii slightly generous so close calls feel heroic and fair.
@@ -100,6 +107,7 @@ Measure actual rendered pixel height (body height) on screen, including tiny bad
 ### Time-to-Fun & Friction Budgets
 - **Fast boot:** Interactive Title screen in `<= 3s` (allow instant skip of splash/engine logos).
 - **1-press entry & retry:** Title -> Play in `1` press. Defeat/Fail -> Instant Restart in `1` press (`<= 500ms` via in-memory state reset rather than full asset reload).
+- **Onboarding adds zero friction:** A first-time player reaches the first meaningful verb in the real run within `<= 10s` of pressing Play, with the same number of presses as a returning player (`0` extra screens, modals, or confirmations).
 - **1-frame input response:** Register player inputs and display initial visual/audio reaction within 1 frame (`<= 16.6ms` at 60fps).
 - **Non-blocking menus:** Menu transitions `< 200ms` (`100–220ms`). Never lock out input during transitions or result banners—allow buffering or instant skip.
 - **Zero-latency pause:** Immediately freeze gameplay timers, physics, AI, and looping danger SFX. Auto-pause on window blur, browser tab switch (`visibilitychange`), or controller disconnect.
@@ -200,6 +208,7 @@ Never introduce unless explicitly requested:
 - **No polishing an unfun greybox:** Never pile shaders, bloom, particles, or meta-progression onto a core 30-second loop that has not proven fun on its own.
 - **No SaaS / Web-App UI pasted onto games:** No generic glassmorphic Tailwind dashboard cards, neon purple/cyan AI gradients, or flat admin tables sitting over a game canvas. Match framing, typography, and motion to the game world.
 - **No Frame-1 tutorial text walls:** Never dump 5+ mechanics in a launch modal. Teach one verb at a time in play (`<= 1` short prompt + active glyph).
+- **No tutorial detours from the core flow:** No separate tutorial or practice mode, "learn first" gate, slideshow, or `Next`-button walkthrough that sits outside the real run, and no onboarding that freezes the whole game behind an overlay. The first run is the tutorial (§3 Teach Inside the Real Run).
 - **No flat, silent reward loops or stat-stick filler:** Never ship progression that silently increments a tiny number with zero anticipation/payoff or offers only "+2%" spreadsheet boosts.
 - **No unreadable combat chaos:** Never let particles, bloom, floating numbers, or busy floors obscure Tier 1 silhouettes or enemy telegraphs.
 - **No missing game hygiene:** Always ship Title -> Play, Pause, Instant Restart, Settings (Audio/Controls/Accessibility), and Quit/Return to Title.
@@ -227,10 +236,16 @@ Run via Playwright/headless browser (web games) or automated screenshot/test har
    - Traverse Title -> Play -> Pause -> Settings -> Resume -> Restart -> Quit using only keyboard or gamepad (confirm initial focus, focus ring, focus restoration, cursor auto-hide, `Escape`/`B` back navigation, and `<= 500ms` 1-press retry).
    - Verify live glyph switching, audio Mute + Pause freeze, reward bursts free of `> 1.5s` unskippable lockouts, flash rate `<= 3/sec`, and `Reduced Motion` disabling shake.
 5. **HUD Subtraction Audit:** Delete or fade any HUD counter, border, badge, or label that does not serve an immediate player decision, then re-capture to confirm.
+6. **First-Run Onboarding Pass:** Start from a clean save and verify:
+   - `Title -> Play` takes `1` press and lands in the real run, and the screens and presses before the first verb match a returning-player run.
+   - At most one prompt is visible at a time. Each prompt clears only when the real verb is performed, and none needs a `Next`/`OK` press.
+   - Input, animation, and audio stay live while prompts show.
+   - Progress earned during onboarding is saved under the normal rules.
+   - With an existing save, no first-run prompt appears.
 
 ### Part B — Human Playtest & Fun Gate (Before Content Expansion & Release)
 Automated tools cannot detect boredom, confusion, or emotional flatlines:
 
 1. **Silent Observation Rule:** Put the build in front of real players and say nothing while they play. Record where they hesitate, misunderstand a telegraph, ignore a mechanic, frown, or smile.
-2. **First-60-Seconds & First-Failure Audit:** Fix any friction in the opening minute (controls, goal clarity, visual hierarchy) and verify that the player's first death creates immediate curiosity ("I know how to beat that next try") rather than frustration.
+2. **First-60-Seconds & First-Failure Audit:** Fix any friction in the opening minute (controls, goal clarity, visual hierarchy) and verify that the player's first death creates immediate curiosity ("I know how to beat that next try") rather than frustration. Also check that first-time players realize they are already playing, and do not wait for the game to finish explaining or look for a "start" after the tutorial.
 3. **Telemetry-Backed Iteration:** Combine silent playtest notes with logged telemetry (death hotspots, unused upgrades, dead-air stretches, drop-off points) and feed concrete, specific tuning tasks back into the build before adding new content.
