@@ -6,7 +6,7 @@ Universal baseline for building award-caliber games: uniting creative direction,
 
 ## 0. Game Identity & Creative Lock (Fill Before Writing Feature Code)
 
-Guidelines raise the floor; these six locked decisions set the ceiling. Never start polishing visuals or meta-systems until this block is filled in and validated.
+Guidelines raise the floor; these locked decisions set the ceiling. Never start polishing visuals or meta-systems until this block is filled in and validated.
 
 - **One-Sentence Hook:** [What makes a player stop scrolling and immediately understand why this game is uniquely fun?]
 - **3 Non-Negotiable Pillars:** [e.g., 1. One-second tactical readability, 2. Synergies that feel gloriously broken, 3. Zero-downtime kinetic flow]
@@ -16,6 +16,11 @@ Guidelines raise the floor; these six locked decisions set the ceiling. Never st
   - **2-Second Sound Test:** [What signature sound palette and reactive music mood define this world?]
 - **Engine / Platforms / Input:** [e.g., Web Canvas / PixiJS / Three.js / Phaser / Godot 4 / Unity] | [PC, Steam Deck, Mobile] | [KB+M, Gamepad, Touch]
 - **Frame Budget & Locales:** `60 FPS` target (`p95 <= 16.6ms`; `30 FPS` absolute floor on handheld/low-end) | Korean + English (`ko`, `en`)
+- **Art-Direction Lock (Before Gate 2):** Pick the look by eye, not by description:
+  - Produce `2–3` clearly different art directions as AI concept frames of the **same two scenes**: the core gameplay moment and the climax/reward moment.
+  - Build a cheap live in-engine preview of that same scene with switchable presets (palette, lighting, outline, post) and an on-screen perf readout (FPS, p95, draw calls), so the chosen look is proven affordable on the target device.
+  - The decision-maker picks one direction; record it here, and only then build the slice.
+  - **Concept art is a mood reference only.** Image models get domain content wrong (e.g. two of three concepts drew a pentagonal-prism net with `4` or `6` side faces instead of `5`). Check every concept frame for factual accuracy, and generate real content (shapes, maps, diagrams, numbers) from data/code, never by tracing the concept.
 
 ---
 
@@ -24,7 +29,7 @@ Guidelines raise the floor; these six locked decisions set the ceiling. Never st
 AI coding agents can easily polish a dull prototype until it looks finished. Enforce strict stage gates so polish multiplies genuine fun rather than disguising weak mechanics:
 
 1. **Gate 1 — Greybox Core Loop (Zero-Art Fun Test):** Build the 30-second core loop using untextured geometric shapes, zero particles, and zero meta-menus. If movement, timing, risk-reward, and core verbs are not genuinely compelling in greybox, fix the rules—do not cover boredom with shaders or juice.
-2. **Gate 2 — Vertical Slice (Signature Identity Lock):** Build one complete, shippable slice (`Boot -> Play -> Escalation -> Climax -> Reward -> Retry`) featuring the locked art direction, dynamic audio, HUD minimalism, feel tuning, and first-run onboarding taught inside that same slice (§3 Teach Inside the Real Run).
+2. **Gate 2 — Vertical Slice (Signature Identity Lock):** Build one complete, shippable slice (`Boot -> Play -> Escalation -> Climax -> Reward -> Retry`) featuring the locked art direction (§0 Art-Direction Lock), dynamic audio, HUD minimalism, feel tuning, and first-run onboarding taught inside that same slice (§3 Teach Inside the Real Run).
 3. **Gate 3 — Depth Over Bloat (Combinatorial Expansion):** Expand content by introducing mechanics that interact multiplicatively with existing rules (synergies, counterplay, environmental combinations) rather than bolting on isolated one-off gimmicks.
 
 ---
@@ -46,6 +51,11 @@ Every active frame must pass both the **1-Screenshot Identity Test** (distinctiv
   - **Spatial (World-space):** Entity health bars, damage numbers, world-anchored interact prompts.
   - **Meta (Screen-edge):** Directional hit arcs, subtle low-HP vignette or audio low-pass filter (respect motion settings).
   - **Non-Diegetic (Overlay HUD & Menus):** Corner vitals, pause, inventory, settings.
+
+### Production Art Sourcing & IP
+- **Generated art over code-drawn placeholders:** When visual quality matters, produce characters, environments, icons, and VFX sheets with an image model (or artists) in the locked direction. Code-drawn shapes are greybox only (Gate 1); if one ships, list it as a known gap.
+- **Prompt and inspect for marks:** Every prompt says `no logos, no brand marks, no text`. Inspect every output at full size for trademarks, signatures, watermarks, and garbled or wrong text before it enters the build; render real text in-engine.
+- **Style references describe a look, never a source:** "Clean sporty product look" is fine; copying a specific existing game, character, mascot, or brand (name, design, silhouette, logo) is not. Never name the referenced work in generation prompts.
 
 ---
 
@@ -147,6 +157,12 @@ Juice must communicate weight, state, and spatial clarity—never arbitrary clut
 - **Polyphony caps & ducking:** Enforce per-sound cooldowns (`>= 30–50ms`) and voice caps so rapid multi-hits/pickups never distort or clip. Duck BGM/ambient cleanly during dialogue, pause, and critical warnings.
 - **Clean audio lifecycle:** Unlock audio reliably on the first user gesture (web/mobile) and suspend/resume cleanly on focus loss without bursting queued cues.
 
+### Asset Sourcing & Register
+- **Real recorded SFX for core verbs:** Use recorded sounds (CC0 or licensed) over synthesized beeps for every core verb and impact (a gunshot must sound like a gun). Layer `2–3` samples per heavy action and keep `3–5` variations or pitch variation (`±5%–8%`) per cue.
+- **Credit generated music:** AI-generated music is allowed when its license permits; credit the tool/model in the in-app Credits screen.
+- **Asset register (every kept asset):** For each art, SFX, and music file record: source, license, author/account, date, prompt (if generated), file hash, and processing applied. No entry, no ship.
+- **Lazy-load with fallback:** Load samples and music lazily; a failed or slow load falls back to silence or a lighter cue and never blocks input, boot, or the first interactive frame.
+
 ---
 
 ## 7. Reward Loops, Payoff Staging & Ethical Momentum
@@ -166,6 +182,11 @@ Maintain overlapping rhythm layers so a rewarding goal is always within reach:
 - **Micro (`1–5s`):** Crisp hit confirmation, weak-point crits, parry sparks, pickup magnetism, rhythmic scoring ticks.
 - **Meso (`1–5m`):** Room/wave clear, mini-boss chest, level-up draft, distinct power spike that visibly transforms combat or traversal.
 - **Macro (`10–30m+`):** Permanent unlocks, new playable archetypes/modifiers, mastery milestones, or visible meta-progression surfaced between runs.
+- **Replay for short sessions (class + home):** Where sessions are short (e.g. classroom), keep one run `~3 min` so a group fits `2–3` runs in `10–15 min`, and give home play long-term goals:
+  - Collection cards per level, `3–4` explicit mastery challenges per level, and cosmetic unlocks on a visible ladder.
+  - A randomized mode unlocked after the authored levels are complete.
+  - A one-line "next goal" on every result screen naming the closest reachable reward.
+  - Points as a secondary score with a visible breakdown (where each point came from). The Ethical Craft Boundary below still applies: no timers, energy, FOMO, or loot odds.
 
 ### Escalating Streaks, Meaningful Variance & "One More Run" Recovery
 - **Musical pitch escalation:** Step SFX pitch upward along a clean musical scale (pentatonic or `+1` semitone per hit/pickup, capped at +1 octave) for consecutive combos/streaks, resolving with a satisfying bank/cash-out chime (with `>= 30–50ms` cooldown caps).
@@ -173,6 +194,20 @@ Maintain overlapping rhythm layers so a rewarding goal is always within reach:
 - **Exciting variance with bad-luck protection:** Enable memorable high-roll moments paired with deterministic pity/floor guarantees so bad RNG never feels unfair.
 - **Progress-forward end-of-run recap:** On defeat or clear, highlight tangible progress earned (unlocks advancing, personal best delta, build summary, clear cause of death) with Retry / Next Run pre-focused (`1` press, `<= 500ms`).
 - **Ethical Craft Boundary (No Dark Patterns):** Hard bans on artificial wait timers, energy gates, pay-to-skip friction, deceptive odds, fake FOMO countdowns, and manipulative red notification dots.
+
+---
+
+## 7b. Learning Games: Knowledge as Power
+
+In a learning game the lesson is a mechanic, not a quiz bolted between levels. Onboarding rules in §3 apply unchanged.
+
+- **Knowledge-as-power:** A correctly stated rule unlocks a verb or power that makes play faster or more spectacular. E.g. after counting one group of edges by hand, stating the pattern paints all matching groups in one sweep.
+- **Predict -> Verify loop:** Ask for a guess before the work (e.g. "how many edges?"), let the player do it, then confirm at the end with a stamp that shows the formula (e.g. `3 × 5 = 15`) next to the guess.
+- **Questions at the moment of need:** Questions appear in the world where the knowledge is used, one at a time, with `3` choices. Never a question list or a separate test screen.
+- **Cheap, teaching failure:** A wrong answer explains the underlying structure in `1` line and costs only the bonus, never progress, lives, or a forced replay.
+- **Misconception-based distractors:** Each wrong choice reflects a real, common student error and carries its own one-line explanation of that error.
+- **Transfer mode:** After the authored levels, randomize parameters beyond the textbook set (other sizes, counts, shapes) to test generalization, not memorization.
+- **Educational correctness is a release gate:** Every displayed number, formula, label, and diagram is generated from the same model the rules use; no hand-typed or image-generated answers. Verify a sample of every level against an independent calculation before release.
 
 ---
 
@@ -185,6 +220,21 @@ Maintain overlapping rhythm layers so a rewarding goal is always within reach:
   - Support a reproducible run seed (`seed`) so bugs, physics edge cases, and unfair spawns can be replayed deterministically.
   - Instrument lightweight local dev telemetry (death positions/causes, damage taken per enemy, upgrade pick/win rates, time-to-clear per stage) and support headless/fast-forward balance simulations where genre-appropriate so tuning relies on evidence, not guesswork.
 - **Save integrity & versioned schemas:** Separate manual saves from autosaves; never autosave during death or guaranteed-fail states; version all save payloads (`schemaVersion`) with atomic writes and safe migration fallbacks.
+- **Low-end performance tier (web 3D on school/older laptops):** Default budgets per tier:
+
+  | Budget | Normal | Low |
+  |---|---|---|
+  | DPR | `min(dpr, 2)` | `1` |
+  | Full-screen post-processing | Off by default; fake glow with additive quads/thick lines | Off |
+  | Shadows | One shadow map `<= 1024` | Blob shadows |
+  | Draw calls / triangles | `<= ~100` / `<= ~100k` | Lower (e.g. `<= ~60` / `<= ~50k`) |
+  | Textures | Procedural or atlas, `<= 1024 px` | Same, smaller where possible |
+  | MSAA on render targets | Up to `4x` | Off (`1` sample) |
+
+  - Merge static geometry. Step down a tier when p95 frame time over a `~2 s` window exceeds the budget; step up only after a longer calm window (hysteresis, e.g. `~10 s`). Always offer a manual `Low` toggle in Settings.
+  - Set the step-up threshold above the display's frame interval. A 60 Hz display never reports less than `16.7 ms`, so a `< 16.6 ms` rule never steps up (e.g. use `<= 17.5 ms`). When a step-up fails within a short trial, block step-ups only for a limited time (e.g. `60 s`), not for the rest of the session.
+  - Laptops without a usable GPU render in software, where fill rate dominates. MSAA is the first cost to drop (one measured scene went from `8.5` to `15–17` FPS with MSAA off). If that is not enough, add a governor-only floor below `Low` that renders the 3D view at `~0.75` internal resolution and keeps the DOM HUD at full resolution.
+  - Lazy-load heavy assets (models, music, large textures) after the first input; the first interactive frame never waits for music.
 
 ---
 
@@ -195,6 +245,7 @@ Maintain overlapping rhythm layers so a rewarding goal is always within reach:
 - **Photosensitivity hard safety (WCAG 2.3.1 / XAG 118):**
   - Never exceed **3 flashes per second** in any VFX, damage indicator, reward reveal, or UI animation.
   - Ban large-area (`>= 20%` viewport) high-contrast flashes and saturated red strobes; remove hazardous flashes by design rather than relying on warning splash screens.
+  - Fine high-contrast patterns (ruled lines, stripes, text) under camera shake can count as flashes. Re-run the automated flash check after every texture contrast change (darker ruled lines on one page raised a shake from `3` to `4` flashes per second).
 - **3-Tier Motion & Haptics Controls (XAG 117):**
   - Provide `Full / Reduced / None` motion settings (`Reduced` removes camera shake, wobble, rotation, parallax, and strobes while preserving semantic timing and readability; `None` eliminates decorative UI/background motion and locks subtitles still).
   - Provide a dedicated Haptics / Rumble toggle and intensity slider (`0–100%`).
@@ -232,8 +283,10 @@ Run via Playwright/headless browser (web games) or automated screenshot/test har
    - Zero console errors, uncaught exceptions, or missing asset warnings.
    - Verify `p95 <= 16.6ms` frame time (60fps target) during heavy combat, reward bursts, and HUD updates.
    - Simulate window blur / tab switch (`visibilitychange` / large `dt` gap) and verify clean auto-pause with zero physics tunneling or timer leaps.
+   - **Low-end protocol (when a Low tier exists, §8):** `1366x768`, DPR `1`, CPU throttle `4x` (Chromium DevTools protocol), Low tier must hold `p95 <= 33 ms` (30 FPS floor). Record FPS, p95, draw calls, and triangles per scene in the verification notes. Run one pass with the GPU disabled (Chromium `--disable-gpu`, software rendering) to approximate a laptop without a usable GPU. Headless browsers cap at the display rate (`60 FPS`), so a `16.7 ms` p95 there means "at the cap", not "slow".
 4. **Input, Reward & Safety Pass:**
    - Traverse Title -> Play -> Pause -> Settings -> Resume -> Restart -> Quit using only keyboard or gamepad (confirm initial focus, focus ring, focus restoration, cursor auto-hide, `Escape`/`B` back navigation, and `<= 500ms` 1-press retry).
+   - Press every button with a mouse and with touch. A pressed state must not move the hit target: a button that jumps away under the pointer loses the click (on the web, put the press offset on the CSS `translate` property so a positioning `transform` stays).
    - Verify live glyph switching, audio Mute + Pause freeze, reward bursts free of `> 1.5s` unskippable lockouts, flash rate `<= 3/sec`, and `Reduced Motion` disabling shake.
 5. **HUD Subtraction Audit:** Delete or fade any HUD counter, border, badge, or label that does not serve an immediate player decision, then re-capture to confirm.
 6. **First-Run Onboarding Pass:** Start from a clean save and verify:
@@ -242,10 +295,12 @@ Run via Playwright/headless browser (web games) or automated screenshot/test har
    - Input, animation, and audio stay live while prompts show.
    - Progress earned during onboarding is saved under the normal rules.
    - With an existing save, no first-run prompt appears.
+7. **Scripted New-Player Run:** Passing tests does not prove fun or feel. (One build passed hundreds of tests and a thousand bot matches, yet a first-time player saw static tokens, toy sounds, no visible fight, and lost instantly.) Before calling a build playable, drive a clean-save run through the real UI and keep captures (frame strip or video) of the first `60 s`, showing core verbs, feedback, and audio in motion.
 
 ### Part B — Human Playtest & Fun Gate (Before Content Expansion & Release)
 Automated tools cannot detect boredom, confusion, or emotional flatlines:
 
 1. **Silent Observation Rule:** Put the build in front of real players and say nothing while they play. Record where they hesitate, misunderstand a telegraph, ignore a mechanic, frown, or smile.
 2. **First-60-Seconds & First-Failure Audit:** Fix any friction in the opening minute (controls, goal clarity, visual hierarchy) and verify that the player's first death creates immediate curiosity ("I know how to beat that next try") rather than frustration. Also check that first-time players realize they are already playing, and do not wait for the game to finish explaining or look for a "start" after the tutorial.
-3. **Telemetry-Backed Iteration:** Combine silent playtest notes with logged telemetry (death hotspots, unused upgrades, dead-air stretches, drop-off points) and feed concrete, specific tuning tasks back into the build before adding new content.
+3. **Independent Review Gate:** Before a build is called playable or released, a reviewer who did not build it (a different model or person, read-only) judges the Part A evidence and the first-`60 s` captures against this document. Each item passes only with cited evidence; missing evidence fails.
+4. **Telemetry-Backed Iteration:** Combine silent playtest notes with logged telemetry (death hotspots, unused upgrades, dead-air stretches, drop-off points) and feed concrete, specific tuning tasks back into the build before adding new content.
