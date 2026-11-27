@@ -9,6 +9,7 @@ Universal UI/UX, design token, modern web platform, and verification baseline. E
 - **Theme Mode:** `light` (switch to `light dark` with `light-dark()` pairs when enabling dual theme)
 - **Neutral Tone:** Cool Apple Neutral (`#FFFFFF` / `#F5F5F7`) — swappable to Warm Paper (`#FAF9F6` / `#F2F0EB`)
 - **Brand Accent:** `#0066CC` — swap `--accent` in Section 2 to re-theme globally (must keep `>= 4.5:1` as text on every neutral surface)
+- **Brand Finish:** Flat primary fill (default) — or a subtle top-to-bottom tint (accent ~14% lighter → ~15% deeper, 1px inner highlight, soft accent-tinted shadow) for a richer brand; emphasis tint ~10% accent fading out. Pick one and use it everywhere
 - **Primary Locale(s):** Korean + English (`ko`, `en`)
 - **Audience:** 20s to 60s by default (`10 to 60+` for student-facing screens). Presbyopia starts around 40, so the type floors in Section 3 are not optional for adult tools
 - **UI Stack:** React + TypeScript + Tailwind CSS v4 (bound to CSS custom properties) + native HTML first, owned headless primitives (`src/components/ui/`) second
@@ -19,14 +20,14 @@ Universal UI/UX, design token, modern web platform, and verification baseline. E
 ## 1. Visual Philosophy & Platform-First Policy
 
 - **Quiet chrome, content first:** Navigation, toolbars, inputs, and containers stay neutral and recede. User content and the single primary action own the screen.
-- **One paper per screen (Content First):** The content the user came for (a book, document, question, card, board, image) is the only surface drawn as paper; all chrome recedes into the page background.
-  - **No chrome bands:** Headers and toolbars sit on the page background. Never draw a full-width white band with a bottom border for a header or toolbar. A toolbar is one floating group at content width (rounded, one soft shadow), centred under or beside what it acts on; separate groups inside it with short hairlines, not stretching gaps.
-  - **Content above the fold:** On list, shelf, and gallery screens put the title and the one primary action in a single row and the content directly below it. Move storage notes, rights notices, connection settings, and how-it-works text below the content (a footer note) or into a disclosure; never delete them. An empty list shows an add slot shaped like the content (a dashed "+ New …" card), not a large notice box.
-  - **Inner whitespace serves content:** Padding inside a card or panel is what the content needs to breathe (usually `16px`–`24px`). To enlarge content, shrink the chrome first; never shrink the content and fill the gap with blank paper.
-  - **No badges on controls:** Do not draw keyboard-shortcut or count badges on buttons. Shortcuts live in the tooltip (`title`), `aria-keyshortcuts`, menus, and help. Hide routine status text such as "saved on this device"; show only in-progress and failure states (keep a screen-reader announcement).
-  - **Quiet emphasis:** Hover and selected regions use a faint accent wash gradient (about 10% → 3% accent, fading out) with a hairline border and a soft glow, labeled by an opaque paper pill with ink text. Solid accent fill is reserved for the pressed state and the single primary action.
-  - **Rich primary fill:** The single primary action is not a flat saturated color: a top-to-bottom fill from the accent lightened about 14% to the accent deepened about 15%, a 1px inner top highlight, and a soft accent-tinted shadow, built from the accent token with `color-mix()`. Pressed and expanded states deepen to the active accent.
-  - **Fixed layouts stay fixed:** Print-faithful or measured content layouts keep their inner geometry; only the chrome around them changes. Minimalism never trades away the readability rules (text size, labels, hit targets) below.
+- **Content first, chrome recedes:** What the user came for (records, documents, products, messages, media) owns the first screen; navigation, toolbars, and notices stay quiet and never push content below the fold.
+  - **Content above the fold:** Put the view title and its one primary action in a single row and the content directly below. Move storage notes, rights notices, settings, and how-it-works text below the content or into a disclosure; never delete them.
+  - **No decorative badges:** Do not draw keyboard-shortcut badges or ornamental pills on controls (shortcuts live in the tooltip, `aria-keyshortcuts`, menus, and help). Counts that drive an action (unread, cart, errors) are information, not decoration, and stay.
+  - **Calm status:** Routine status ("saved") is quiet text or an icon with an accessible name, never a banner; in-progress and failure states are always visible.
+  - **Quiet emphasis:** Hover and selection use a faint accent tint and a hairline border, labeled on an opaque surface. Solid accent fill is reserved for the pressed state and the single primary action.
+  - **Inner whitespace serves content:** Padding inside a card or panel is what the content needs to breathe. To give content more room, shrink chrome first.
+  - **Content-centric surfaces (readers, editors, canvases, boards, galleries):** The content object is the only surface drawn as paper. Headers and toolbars sit on the page background instead of full-width bands, a toolbar is one floating group at content width beside or under what it acts on, and an empty collection shows an add slot shaped like the content. Print-faithful or measured layouts keep their inner geometry. Data-dense views (tables, dashboards, forms, checkout) keep attached toolbars and conventional sticky headers when that is the familiar pattern.
+  - **Brand finish lives in §0:** The primary-fill treatment (flat, or a subtle top-to-bottom tint with an inner highlight) and the emphasis tint strength are brand choices recorded in Project Overrides, not universal rules.
 - **Hierarchy through space and type:** Separate groups with generous whitespace and clear typographic scale first. Use `1px` hairline dividers only when spacing alone leaves ambiguity.
 - **Restraint over decoration:** Every border, badge, icon, and sentence must earn its pixels. When in doubt, subtract.
 - **Platform-First engineering:** Prefer native HTML/CSS capabilities (`<dialog>`, Popover API, CSS Anchor Positioning, `<details>`, `@container`, `subgrid`, `@starting-style`, `:user-invalid`, `field-sizing`) over JavaScript libraries. Use headless UI primitives (Radix / Base UI / shadcn) only when native elements cannot express the required interaction (e.g., comboboxes, multi-selects, complex data tables).
@@ -232,7 +233,7 @@ Never introduce unless explicitly requested:
 - **No glass under text:** See Section 1, *Solid surfaces under text*.
 - **No chat box as the default AI entry:** Offer named actions on the selected thing first; free text is secondary.
 - **No redundant chrome:** No icons beside every heading/menu item; no decorative pill badges for plain metadata.
-- **No chrome bands or badge clutter:** No full-width white header/toolbar bands, no shortcut or count badges on buttons, no always-on "saved" status text (see Section 1, *One paper per screen*).
+- **No badge clutter or notice walls:** No shortcut or decorative badges on buttons, and no notice boxes that push content below the fold (see Section 1, *Content first, chrome recedes*).
 - **No marketing fluff or tone drift:** No exclamation marks or hype greetings in product UI. Keep Korean copy consistent per view (해요체 or concise noun labels—never mix 반말/존댓말 or inconsistent Korean/English nav labels).
 
 ---
@@ -257,7 +258,7 @@ Code compiling is not verification. Before reporting any UI task complete, verif
    - Zero console or uncaught page errors.
    - Zero critical/serious axe-core accessibility violations and **CLS < 0.05**.
 6. **Ease-of-Learning Walkthrough:** Walk the core task as a first-time user (a 10-year-old student and a user in their 60s): every action has a visible text label, no step depends on hover/long-press/swipe alone, no jargon appears, and every error names the next action.
-7. **Content-First Check:** At `1440x900` and `390x844` the content (first cover, card, page, or question) starts inside the first screen below a single title/action row; no chrome band spans the full width; buttons carry no shortcut or count badges; the primary action uses the rich fill.
+7. **Content-First Check:** At `1440x900` and `390x844` the content (first record, card, page, or question) starts inside the first screen below a single title/action row; no notice box sits above it; controls carry no decorative or shortcut badges.
 8. **Visual Subtraction Audit:** Inspect actual rendered screenshots. Remove competing focal points, redundant borders, broken `8px` spacing, or awkward Korean wraps, then re-screenshot to confirm.
 
 ---
