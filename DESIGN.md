@@ -171,9 +171,14 @@ Never hardcode hex values or raw palette utilities (`bg-indigo-500`, `text-slate
 
 - **Spacing rhythm:** Strict `0.5rem` (`8px`) grid (`0.5, 1, 1.5, 2, 3, 4rem`). Use `0.25rem` (`4px`) only for tight icon-to-label pairing.
 - **Logical properties:** Prefer `padding-inline`, `margin-block`, `max-inline-size`, and `inset-block-end` over physical directional properties.
-- **Container widths:**
-  - Focused reading, settings, forms: `42.5rem` to `47.5rem` (`680px–760px`)
-  - Main workspace: `70rem` to `75rem` (`1120px–1200px`) with `1.5rem` desktop / `1rem` mobile inline padding
+- **Container widths (cap the measure, not the page):**
+  - Focused reading, settings, forms, dialogs: `42.5rem` to `47.5rem` (`680px–760px`); long prose `60ch–80ch`
+  - Main workspace: uses the available width with `1.5rem` desktop / `1rem` mobile inline padding. Never cap the whole page or content column at a fixed pixel width (a `1320px` column leaves ~600px of empty band at `2560px`); cap only the reading-measure blocks inside it
+  - Card and list grids grow by adding columns, not by stretching cards: `grid-template-columns: repeat(auto-fill, minmax(Npx, 1fr))`. A fixed-count grid (`repeat(3, 1fr)`) switches to `auto-fill` on wide viewports
+  - Small screens are unchanged: no horizontal scroll at `390px`
+- **Navigation shell (default: floating rail):** Primary navigation defaults to a thin vertical rail floating over the canvas on the left (`72px–96px` panel with a margin, concentric radius, light shadow), so content gets the rest of the width. Each destination shows an icon *and* a short visible label (never icon-only); the current destination is marked by shape or weight (filled pill, bold label), not color alone, plus `aria-current="page"`. Targets follow the `44px` rule and labels the `14px` floor.
+  - A full left sidebar and a top horizontal bar are user-selectable layout options, persisted per device; switching changes layout only, never features, labels, or test ids.
+  - Below tablet width (about `1100px` / `68.75em`) the rail collapses into a top bar so content keeps the full width.
 - **Component-level responsiveness:** Wrap reusable cards, toolbars, list rows, and panels in `container-type: inline-size` and adapt with `@container` queries so they work inside sidebars and split panes. Reserve viewport media queries (`40em`, `64em`) for macro page shells.
 - **Cross-card alignment:** Use CSS `subgrid` when adjacent cards or grouped rows must share header/footer baselines.
 - **Media stability:** Reserve explicit `aspect-ratio` (or intrinsic `width`/`height`) on all images, videos, thumbnails, and embeds to prevent layout shift.
@@ -242,7 +247,7 @@ Never introduce unless explicitly requested:
 
 Code compiling is not verification. Before reporting any UI task complete, verify rendered output in a real browser (Playwright CLI / Playwright MCP / Chrome DevTools):
 
-1. **Multi-Viewport & Zoom Capture:** Verify affected routes at `1440x900` (desktop), `390x844` (mobile), and **200% browser text zoom** with zero clipped text and zero horizontal overflow (`scrollWidth <= innerWidth`).
+1. **Multi-Viewport & Zoom Capture:** Verify affected routes at `1440x900` (desktop), `390x844` (mobile), and **200% browser text zoom** with zero clipped text and zero horizontal overflow (`scrollWidth <= innerWidth`). Shells and grids are also captured at `1920x1080` and `2560x1440`: content spans the available width (no empty side band beyond the inline padding and the rail), grids add columns, and only reading-measure blocks stay capped.
 2. **State & Top-Layer Capture:** Screenshot default, empty, loading/error (when applicable), and open `<dialog>` / `[popover]` states.
 3. **Interactive & Korean IME Checks:**
    - Tab through all controls: visible `:focus-visible`, logical tab order, `Escape` closes overlays and restores focus to the trigger.
